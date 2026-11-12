@@ -33,6 +33,12 @@ jobs:
         run: |
           pip install build
           python -m build --wheel
+      - name: Repair wheel to a manylinux tag
+        run: |
+          pip install auditwheel
+          auditwheel repair wheel/dist/*.whl -w wheel/dist-fixed
+          rm wheel/dist/*.whl
+          mv wheel/dist-fixed/*.whl wheel/dist/
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

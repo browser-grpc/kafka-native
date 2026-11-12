@@ -54,11 +54,11 @@ EOF
 FAILED=0
 start_kafka || exit 1
 echo "== rust direct + admin (apache kafka)"
-(cd "$ROOT/rust" && KAFKA_PROXY_E2E_BROKER=127.0.0.1:19092 cargo test --locked --test kafka_direct_e2e --test kafka_admin_e2e) || FAILED=1
+(cd "$ROOT/rust" && KAFKA_PROXY_E2E_BROKER=127.0.0.1:19092 cargo test --test kafka_direct_e2e --test kafka_admin_e2e) || FAILED=1
 echo "== rust ffi (apache kafka)"
-(cd "$ROOT/rust" && KAFKA_PROXY_E2E_BROKER=127.0.0.1:19092 cargo test --locked --test kafka_native_ffi_e2e) || FAILED=1
+(cd "$ROOT/rust" && KAFKA_PROXY_E2E_BROKER=127.0.0.1:19092 cargo test --test kafka_native_ffi_e2e) || FAILED=1
 echo "== building libkafka_native"
-(cd "$ROOT/crates/kafka-native" && cargo build --locked) || FAILED=1
+(cd "$ROOT/crates/kafka-native" && cargo build) || FAILED=1
 echo "== c ffi smoke"
 cc -O1 -I"$ROOT/crates/kafka-native/include" "$ROOT/crates/kafka-native/tests/ffi_smoke.c" -L"$ROOT/crates/kafka-native/target/debug" -lkafka_native -Wl,-rpath,"$ROOT/crates/kafka-native/target/debug" -o "$TMP/ffi_smoke" && "$TMP/ffi_smoke" 127.0.0.1:19092 || FAILED=1
 echo "== python native (apache kafka)"
