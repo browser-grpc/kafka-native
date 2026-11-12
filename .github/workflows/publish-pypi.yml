@@ -20,19 +20,19 @@ jobs:
           - runner: ubuntu-24.04-arm
             image: quay.io/pypa/manylinux_2_28_aarch64
             slug: linux-aarch64
-          - runner: macos-14
+          - runner: macos-latest
             slug: mac-arm64-py312
             python: '3.12'
             macarch: arm64
-          - runner: macos-14
+          - runner: macos-latest
             slug: mac-arm64-py313
             python: '3.13'
             macarch: arm64
-          - runner: macos-14
+          - runner: macos-latest
             slug: mac-x86_64-py312
             python: '3.12'
             macarch: x86_64
-          - runner: macos-14
+          - runner: macos-latest
             slug: mac-x86_64-py313
             python: '3.13'
             macarch: x86_64
@@ -83,6 +83,7 @@ jobs:
             LIB=crates/kafka-native/target/release/libkafka_native.dylib
             TAG=macosx_11_0_arm64
           fi
+          if [ -f "$LIB" ]; then echo "built $LIB"; else echo "LIB MISSING: $LIB"; find crates/kafka-native/target -name 'libkafka_native*' 2>/dev/null | head -3; fi
           mkdir -p wheel/grpcdc wheel/dist
           cp python/grpcdc/*.py wheel/grpcdc/
           cp "$LIB" wheel/grpcdc/libkafka_native.dylib
