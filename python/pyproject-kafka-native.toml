@@ -15,4 +15,4 @@ dependencies = ["grpc-dc>=0.41.0"]
 include = ["grpcdc*"]
 
 [tool.setuptools.package-data]
-grpcdc = ["*.so"]
+grpcdc = ["*.so", "*.dylib"]
