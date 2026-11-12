@@ -33,12 +33,11 @@ jobs:
         run: |
           pip install build
           python -m build --wheel
-      - name: Repair wheel to a manylinux tag
+      - name: Retag wheel to a manylinux tag
         run: |
-          pip install auditwheel
-          auditwheel repair wheel/dist/*.whl -w wheel/dist-fixed
-          rm wheel/dist/*.whl
-          mv wheel/dist-fixed/*.whl wheel/dist/
+          pip install wheel
+          GLIBC=$(ldd --version | head -n1 | grep -oE '[0-9]+\.[0-9]+$' | tr '.' '_')
+          python -m wheel tags --platform-tag manylinux_${GLIBC}_x86_64 --remove wheel/dist/*.whl
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

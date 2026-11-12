@@ -10,6 +10,7 @@ RUN curl -fsSL https://downloads.apache.org/kafka/4.3.1/kafka_2.13-4.3.1.tgz -o 
 ENV KAFKA_HOME=/opt/kafka
 WORKDIR /src
 COPY rust ./rust
+COPY webrtc/rust ./webrtc/rust
 COPY crates ./crates
 COPY python ./python
 COPY proto ./proto
