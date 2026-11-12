@@ -1,0 +1,14 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CI image (broker + toolchain)
+        run: docker build -f docker/kafka-native-ci.Dockerfile -t kafka-native-ci .
+      - name: Run native legs (Apache Kafka)
+        run: docker run --rm kafka-native-ci

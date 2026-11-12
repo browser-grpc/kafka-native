@@ -1,0 +1,39 @@
+# Publish the kafka-native Python wheel (bundled
+# libkafka_native) via PyPI Trusted Publishing (OIDC).
+# Manual dispatch only. Requires a Trusted Publisher
+# configured for the project on PyPI (this repo + this
+# workflow file).
+name: publish-pypi
+on: workflow_dispatch
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build libkafka_native
+        working-directory: crates/kafka-native
+        run: cargo build --release
+      - name: Assemble wheel tree
+        run: |
+          mkdir -p wheel/grpcdc
+          cp python/grpcdc/*.py wheel/grpcdc/
+          cp crates/kafka-native/target/release/libkafka_native.so wheel/grpcdc/
+          cp python/pyproject-kafka-native.toml wheel/pyproject.toml
+          cp python/setup-kafka-native.py wheel/setup.py
+          cp README.md wheel/README.md
+      - name: Build wheel
+        working-directory: wheel
+        run: |
+          pip install build
+          python -m build --wheel
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: wheel/dist

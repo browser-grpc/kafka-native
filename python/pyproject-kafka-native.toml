@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kafka-native"
+version = "0.41.0"
+description = "Kafka native client — in-process Kafka protocol library (bundled libkafka_native) for Apache Kafka/Redpanda, via the grpcdc.kafka.v1 message types"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+dependencies = ["grpc-dc>=0.41.0"]
+
+[tool.setuptools.packages.find]
+include = ["grpcdc*"]
+
+[tool.setuptools.package-data]
+grpcdc = ["*.so"]

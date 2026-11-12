@@ -1,0 +1,25 @@
+# Publish the kafka-native crate via crates.io Trusted
+# Publishing (OIDC). Manual dispatch only. Requires a
+# Trusted Publisher configured for the crate on crates.io
+# (this repo + this workflow file).
+name: publish-crates
+on: workflow_dispatch
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+      - name: Publish kafka-native (retry while the index catches up)
+        working-directory: crates/kafka-native
+        run: |
+          for i in $(seq 1 20); do
+            cargo publish --token ${{ steps.auth.outputs.token }} && exit 0
+            sleep 30
+          done
+          exit 1
