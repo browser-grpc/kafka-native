@@ -127,7 +127,7 @@ dependencies = [
 
 [[package]]
 name = "kafka-native"
-version = "0.1.0"
+version = "0.42.0"
 dependencies = [
  "futures-util",
  "grpc-dc",
