@@ -1,6 +1,6 @@
 [package]
 name = "kafka-native"
-version = "0.41.0"
+version = "0.42.0"
 edition = "2021"
 description = "Kafka protocol client for grpc-dc: dependency-free Kafka wire implementation behind the grpcdc.kafka.v1 service, usable in-process (library) or via the kafka_proxy sidecar"
 license = "Apache-2.0"
@@ -16,7 +16,7 @@ default = ["kafka-tls"]
 kafka-tls = ["dep:tokio-rustls", "dep:rustls", "dep:rustls-pemfile"]
 
 [dependencies]
-grpc-dc = { version = "0.41.0", path = "../../rust" }
+grpc-dc = { version = "0.42.0", path = "../../rust" }
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "sync", "time", "io-util", "net"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 tokio-rustls = { version = "0.26", optional = true, default-features = false, features = ["ring", "tls12"] }
