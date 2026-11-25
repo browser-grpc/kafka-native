@@ -20,10 +20,10 @@ mod pb_message_impl;
 #[path = "gen/kafka_grpc_dc.rs"]
 pub mod stub;
 
-#[path = "../../../rust/gen/kafka_streams_pb.rs"]
+#[path = "gen/kafka_streams_pb.rs"]
 pub mod streams_pb;
 
-#[path = "../../../rust/gen/kafka_streams_processor_pb.rs"]
+#[path = "gen/kafka_streams_processor_pb.rs"]
 pub mod processor_pb;
 
 pub mod streams;
