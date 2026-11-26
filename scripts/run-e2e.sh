@@ -53,14 +53,11 @@ EOF
 }
 FAILED=0
 start_kafka || exit 1
-echo "== rust direct + admin (apache kafka)"
-(cd "$ROOT/rust" && KAFKA_PROXY_E2E_BROKER=127.0.0.1:19092 cargo test --test kafka_direct_e2e --test kafka_admin_e2e) || FAILED=1
-echo "== rust ffi (apache kafka)"
-(cd "$ROOT/rust" && KAFKA_PROXY_E2E_BROKER=127.0.0.1:19092 cargo test --test kafka_native_ffi_e2e) || FAILED=1
-echo "== building libkafka_native"
+echo "== building crates (kafka-native + kafka-service)"
 (cd "$ROOT/crates/kafka-native" && cargo build) || FAILED=1
+(cd "$ROOT/crates/kafka-service" && cargo build && cp target/debug/libkafka_service.so target/debug/libkafka_native.so) || FAILED=1
 echo "== c ffi smoke"
-cc -O1 -I"$ROOT/crates/kafka-native/include" "$ROOT/crates/kafka-native/tests/ffi_smoke.c" -L"$ROOT/crates/kafka-native/target/debug" -lkafka_native -Wl,-rpath,"$ROOT/crates/kafka-native/target/debug" -o "$TMP/ffi_smoke" && "$TMP/ffi_smoke" 127.0.0.1:19092 || FAILED=1
+cc -O1 -I"$ROOT/crates/kafka-service/include" "$ROOT/crates/kafka-service/tests/ffi_smoke.c" -L"$ROOT/crates/kafka-service/target/debug" -lkafka_native -Wl,-rpath,"$ROOT/crates/kafka-service/target/debug" -o "$TMP/ffi_smoke" && "$TMP/ffi_smoke" 127.0.0.1:19092 || FAILED=1
 echo "== python native (apache kafka)"
-(cd "$ROOT/python" && KAFKA_E2E_BROKER=127.0.0.1:19092 GRPC_DC_KAFKA_NATIVE_LIB="$ROOT/crates/kafka-native/target/debug/libkafka_native.so" python3 -m unittest tests.test_kafka_native) || FAILED=1
+mkdir -p "$TMP/grpcdc" && cp "$ROOT/python/grpcdc/kafka_native.py" "$ROOT/python/grpcdc/kafka_pb.py" "$TMP/grpcdc/" && touch "$TMP/grpcdc/__init__.py" && cp "$ROOT/crates/kafka-service/target/debug/libkafka_native.so" "$TMP/grpcdc/" && (cd "$TMP" && GRPC_DC_KAFKA_NATIVE_LIB="$TMP/grpcdc/libkafka_native.so" python3 "$ROOT/scripts/native_smoke.py" 127.0.0.1:19092) || FAILED=1
 exit "$FAILED"

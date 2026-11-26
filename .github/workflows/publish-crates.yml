@@ -23,3 +23,12 @@ jobs:
             sleep 30
           done
           exit 1
+      - name: Publish kafka-service (retry while the index catches up)
+        working-directory: crates/kafka-service
+        run: |
+          cargo update -p grpc-dc -p kafka-native || true
+          for i in $(seq 1 20); do
+            cargo publish --allow-dirty --token ${{ steps.auth.outputs.token }} && exit 0
+            sleep 30
+          done
+          exit 1

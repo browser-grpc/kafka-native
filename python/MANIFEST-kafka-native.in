@@ -1,5 +1,4 @@
 include README.md
 include Cargo.lock
 recursive-include crates/kafka-native *.rs *.toml *.lock *.h
-recursive-include rust *.rs *.toml
-recursive-include webrtc *.rs *.toml
+recursive-include crates/kafka-service *.rs *.toml *.lock *.h

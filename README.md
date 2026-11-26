@@ -18,7 +18,7 @@ Three form factors share one wire implementation:
 - **kafka-proxy** — the [sidecar](https://github.com/browser-grpc/kafka-proxy)
   that bridges the two.
 
-This repository is a generated export (version v0.47.3).
+This repository is a generated export (version v0.48.0).
 
 ## Use
 
@@ -34,7 +34,7 @@ broker.create_topics(vec![("events".into(), 3, 1)], 30_000, false).await?;
 ```
 
 C: link `libkafka_native` and include
-`crates/kafka-native/include/kafka_native.h`. Calls take a
+`crates/kafka-service/include/kafka_native.h`. Calls take a
 method name and the protobuf-encoded request and return the
 protobuf-encoded response.
 
