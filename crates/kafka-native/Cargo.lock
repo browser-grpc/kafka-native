@@ -93,7 +93,7 @@ dependencies = [
 
 [[package]]
 name = "grpc-dc"
-version = "0.48.5"
+version = "0.48.6"
 dependencies = [
  "async-trait",
  "bytes",
@@ -127,7 +127,7 @@ dependencies = [
 
 [[package]]
 name = "kafka-native"
-version = "0.48.5"
+version = "0.48.6"
 dependencies = [
  "futures-util",
  "grpc-dc",
