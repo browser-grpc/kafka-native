@@ -18,7 +18,7 @@ Three form factors share one wire implementation:
 - **kafka-proxy** — the [sidecar](https://github.com/browser-grpc/kafka-proxy)
   that bridges the two.
 
-This repository is a generated export (version v0.48.1).
+This repository is a generated export (version v0.48.2).
 
 ## Use
 
