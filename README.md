@@ -1,5 +1,7 @@
 # Kafka native client
 
+What this is: the **direct** Kafka client library — the Kafka protocol implementation embedded in your process. What it is not: a gRPC service or generated stubs. For cross-language/browser clients over gRPC, use `kafka-grpc` plus `kafka-proxy`. Decision guide: [KAFKA.md](KAFKA.md) ("Which Kafka package do I need?").
+
 An in-process Kafka protocol client for native applications:
 the Kafka wire implementation runs in your process — no proxy
 process, no gRPC hop. It speaks the Kafka binary protocol to
@@ -16,7 +18,7 @@ Three form factors share one wire implementation:
 - **kafka-proxy** — the [sidecar](https://github.com/browser-grpc/kafka-proxy)
   that bridges the two.
 
-This repository is a generated export (version v0.47.2).
+This repository is a generated export (version v0.47.3).
 
 ## Use
 
