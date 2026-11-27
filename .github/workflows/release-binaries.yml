@@ -32,6 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          perl -i.bak -pe "s|^kafka-native =.*|kafka-native = { path = \"../kafka-native\" }|" crates/kafka-service/Cargo.toml
           (cd crates/kafka-service && cargo build --release)
           VER=$(python3 -c "import json; print(json.load(open('RELEASE.json'))['version'])")
           mkdir -p dist/libkafka_native-${{ matrix.plat }}
