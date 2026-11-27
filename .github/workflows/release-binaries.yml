@@ -1,0 +1,41 @@
+# Build per-platform libkafka_native binaries and attach
+# them to this repo's GitHub release for the export
+# version (RELEASE.json). Manual dispatch only; the
+# wrappers in every language point users here.
+name: release-binaries
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            plat: linux-x64
+            lib: libkafka_native.so
+            srclib: libkafka_service.so
+          - runner: ubuntu-24.04-arm
+            plat: linux-arm64
+            lib: libkafka_native.so
+            srclib: libkafka_service.so
+          - runner: macos-latest
+            plat: darwin-arm64
+            lib: libkafka_native.dylib
+            srclib: libkafka_service.dylib
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build and upload libkafka_native
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          (cd crates/kafka-service && cargo build --release)
+          VER=$(python3 -c "import json; print(json.load(open('RELEASE.json'))['version'])")
+          mkdir -p dist/libkafka_native-${{ matrix.plat }}
+          cp crates/kafka-service/target/release/${{ matrix.srclib }} dist/libkafka_native-${{ matrix.plat }}/${{ matrix.lib }}
+          cp crates/kafka-service/include/kafka_native.h dist/libkafka_native-${{ matrix.plat }}/
+          tar -czf libkafka_native-${{ matrix.plat }}.tar.gz -C dist libkafka_native-${{ matrix.plat }}
+          gh release upload "$VER" libkafka_native-${{ matrix.plat }}.tar.gz --clobber || gh release create "$VER" libkafka_native-${{ matrix.plat }}.tar.gz --title "$VER" --notes "kafka-native $VER" 
